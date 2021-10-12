@@ -1,5 +1,8 @@
 #PENDIENTES
-#deslizar
+#Avanzar en la función que mueve la ficha si hay hueco, arriba/abajo, ó izquierda/derecha
+
+#No transformar el 0 a string
+#validar fichas ingresadas
 
 def llenadoManual(matriz):
     """
@@ -17,13 +20,13 @@ def llenadoManual(matriz):
         for j in range(len(matriz[i])):
             num = int(input())
             
-            while (num > 15) or (num < 0):
-                print("ERROR: Valor fuera de rango")
-                num = int(input())
-            
-            while num in lista:
-                print("ERROR: No se puede repetir los números")
-                num = int(input())
+            while ((num > 15) or (num < 0)) or (num in lista):
+                if (num > 15) or (num < 0):
+                    print("ERROR: Valor fuera de rango")
+                    num = int(input())          
+                if num in lista:
+                    print("ERROR: No se puede repetir los números")
+                    num = int(input())
 
             lista.append(num)
             matriz[i][j] = num
@@ -88,11 +91,10 @@ def desplegarTablero(matriz):
             Juan Jesús Ortiz
     """
     for i in range (len(matriz)):
-        for j in range(len(matriz[i])):
-            
+        for j in range(len(matriz[i])):    
             if matriz[i][j] == 0: 
                 matriz[i][j] = str(matriz[i][j])
-                matriz[i][j] = ""
+                matriz[i][j] = ''
 
             print(matriz[i][j], end="\t")
 
@@ -100,7 +102,16 @@ def desplegarTablero(matriz):
     
     return matriz
 
-def main(matriz):
+def indiceFicha(ficha, matriz):
+    for i in range (len(matriz)):
+        for j in range(len(matriz[i])):
+            if matriz[i][j] == ficha: 
+                indiceRen = i
+                indiceCol = j
+
+    return indiceRen, indiceCol
+
+def main(matriz, indiceRen, indiceCol):
     """
         Estandar de codificación:
             Nombre de Función: main
@@ -124,8 +135,17 @@ def main(matriz):
 
     desplegarTablero(matriz)
     
-    if ganador==True:
-        print("¡Felicidades {}, haz ganado!".format(nombre))
+    while ganador!=True:
+        ficha = int(input("¿Cuál ficha quiere mover?: "))
+        while ficha<1 and ficha>15:
+            print("Esa ficha es invalida")
+            ficha = int(input("¿Cuál ficha quiere mover?: "))
+        indiceRen, indiceCol = indiceFicha(ficha, matriz)
+        print("{},{}".format(indiceRen, indiceCol))
+        
+    print("¡Felicidades {}, haz ganado!".format(nombre))
 
 matriz = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
-main(matriz)
+indiceRen = 0
+indiceCol = 0
+main(matriz, indiceRen, indiceCol)
