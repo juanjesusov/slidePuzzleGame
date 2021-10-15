@@ -1,8 +1,9 @@
 #PENDIENTES
-#Avanzar en la función que mueve la ficha si hay hueco, arriba/abajo, ó izquierda/derecha
+#Hacer funcion de mover la ficha seleccinoada
+#Contar en cuantos movimientos el puzzle quedó terminado
 
-#No transformar el 0 a string
-#validar fichas ingresadas
+#DUDAS
+#Donde tenemos que preguntar al usuario si desea continuar jugando?
 
 def llenadoManual(matriz):
     """
@@ -63,7 +64,7 @@ def estadoGanador(matriz):
     """
         Estandar de codificación:
             Nombre de Función: estadoGanador
-            Descripción: Revisa si la matriz esta en orden, y si lo está, felicita al usuario.
+            Descripción: Revisa si la matriz esta en orden, y si lo está, regresa una variable bandera para felicitar al usuario.
             Parámetros de entrada: matriz
             Parámetros de salida: ganador
         Autores: 
@@ -71,10 +72,10 @@ def estadoGanador(matriz):
             Juan Jesús Ortiz
     """
     #¿La matriz ganadora donde tiene que tener al 0?
-    matrizGanadora1 = [[0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15]]
-    matrizGanadora2 = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]
+    #matrizGanadora1 = [[0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15]]
+    matrizGanadora = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]
     ganador = False
-    if matriz == matrizGanadora1 or matriz == matrizGanadora2:
+    if matriz == matrizGanadora:
         ganador = True
 
     return ganador
@@ -100,9 +101,19 @@ def desplegarTablero(matriz):
 
         print()
     
-    return matriz
+    #return matriz
 
 def indiceFicha(ficha, matriz):
+    """
+        Estandar de codificación:
+            Nombre de Función: indiceFicha
+            Descripción: Se encarga de localizar el indice en el que se encuentra la ficha que el usuario quiere mover.
+            Parámetros de entrada: ficha, matriz
+            Parámetros de salida: indiceRen, indiceCol
+        Autores: 
+            Ricardo López
+            Juan Jesús Ortiz
+    """
     for i in range (len(matriz)):
         for j in range(len(matriz[i])):
             if matriz[i][j] == ficha: 
@@ -110,6 +121,52 @@ def indiceFicha(ficha, matriz):
                 indiceCol = j
 
     return indiceRen, indiceCol
+
+def hueco(matriz, indiceRen, indiceCol):
+    """
+        Estandar de codificación:
+            Nombre de Función: hueco
+            Descripción: Se encarga de identificar si es que la ficha seleccionada por el usuario tiene a la casilla vacía adyacente
+                         a ella, tanto en lo horizontal, como en lo vertical.
+            Parámetros de entrada: matriz, indiceRen, indiceCol
+            Parámetros de salida: huecoAdyacente
+        Autores: 
+            Ricardo López
+            Juan Jesús Ortiz
+    """
+    huecoAdyacente = False
+    
+    if indiceRen==0:
+        #Revisar abajo
+        if matriz[indiceRen+1][indiceCol]=='':
+            huecoAdyacente = True
+    
+    if indiceRen==1 or indiceRen==2:
+        #Revisar arriba y abajo
+        if matriz[indiceRen+1][indiceCol]=='' or matriz[indiceRen-1][indiceCol]=='':
+            huecoAdyacente = True
+
+    if indiceRen==3:
+        #Revisar arriba
+        if matriz[indiceRen-1][indiceCol]=='':
+            huecoAdyacente = True
+
+    if indiceCol==0:
+        #Revisar derecha
+        if matriz[indiceRen][indiceCol+1]=='':
+            huecoAdyacente = True
+    
+    if indiceCol==1 or indiceCol==2:
+        #Revisar derecha y izquierda
+        if matriz[indiceRen][indiceCol+1]=='' or matriz[indiceRen][indiceCol-1]=='':
+            huecoAdyacente = True
+
+    if indiceCol==3:
+        #Revisar izquierda    
+        if matriz[indiceRen][indiceCol-1]=='':
+            huecoAdyacente = True
+
+    return huecoAdyacente
 
 def main(matriz, indiceRen, indiceCol):
     """
@@ -131,17 +188,24 @@ def main(matriz, indiceRen, indiceCol):
     else:
         llenadoAutomatico(matriz)
 
-    ganador = estadoGanador(matriz)
-
     desplegarTablero(matriz)
+
+    ganador = estadoGanador(matriz)
     
     while ganador!=True:
-        ficha = int(input("¿Cuál ficha quiere mover?: "))
-        while ficha<1 and ficha>15:
-            print("Esa ficha es invalida")
-            ficha = int(input("¿Cuál ficha quiere mover?: "))
+        ficha = int(input("\n¿Cuál ficha quiere mover?: "))
+        while ficha<1 or ficha>15:
+            print("ERROR. Ficha invalida")
+            ficha = int(input("\n¿Cuál ficha quiere mover?: "))
+        
         indiceRen, indiceCol = indiceFicha(ficha, matriz)
-        print("{},{}".format(indiceRen, indiceCol))
+        huecoAdyacente = hueco(matriz, indiceRen, indiceCol)
+        
+        if huecoAdyacente == True:
+            print("Mandar llamar funcino para mover") #mandar llamar funcion para mover
+        else:
+            desplegarTablero(matriz)
+            print("\nLa ficha que ha seleccionado no puede moverse. El tablero no ha registrado cambios")
         
     print("¡Felicidades {}, haz ganado!".format(nombre))
 
