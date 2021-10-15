@@ -1,6 +1,5 @@
 #PENDIENTES
-#Hacer funcion de mover la ficha seleccinoada
-#Contar en cuantos movimientos el puzzle quedó terminado
+#Optimizar la fuicion de hueco con ciclos para que no utilicen solo if (OPCIONAL; DEJAR AL FINAL) 
 
 #DUDAS
 #Donde tenemos que preguntar al usuario si desea continuar jugando?
@@ -73,7 +72,7 @@ def estadoGanador(matriz):
     """
     #¿La matriz ganadora donde tiene que tener al 0?
     #matrizGanadora1 = [[0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15]]
-    matrizGanadora = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]
+    matrizGanadora = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,'']]
     ganador = False
     if matriz == matrizGanadora:
         ganador = True
@@ -168,7 +167,25 @@ def hueco(matriz, indiceRen, indiceCol):
 
     return huecoAdyacente
 
-def main(matriz, indiceRen, indiceCol):
+#poner estandar de codificación a la función de abajo
+def indiceHueco(matriz):
+    for i in range (len(matriz)):
+        for j in range(len(matriz[i])):
+            if matriz[i][j] == '': 
+                indiceHuecoRen = i
+                indiceHuecoCol = j
+
+    return indiceHuecoRen, indiceHuecoCol
+
+#poner estandar de codificación a la función de abajo
+def mover(matriz, indiceRen, indiceCol, indiceHuecoRen, indiceHuecoCol):
+    
+    matriz[indiceHuecoRen][indiceHuecoCol] = matriz[indiceRen][indiceCol]
+    matriz[indiceRen][indiceCol] = 0
+                
+    return matriz
+
+def main(matriz, indiceRen, indiceCol, indiceHuecoRen, indiceHuecoCol):
     """
         Estandar de codificación:
             Nombre de Función: main
@@ -180,36 +197,44 @@ def main(matriz, indiceRen, indiceCol):
             Ricardo López
             Juan Jesús Ortiz
     """
+    movimientos = -1
     nombre = input("Ingresa tu nombre: ")
     decision = input("\n¿Desea llenar la tabla manualmente o que el programa lo haga automatico por usted? (m/a): ")
     if decision=='m':
         print("\nPara indicar el espacio vacio ingrese cero")
         matriz = llenadoManual(matriz)
+        print()
     else:
         llenadoAutomatico(matriz)
 
     desplegarTablero(matriz)
-
-    ganador = estadoGanador(matriz)
     
+    ganador = estadoGanador(matriz)
     while ganador!=True:
         ficha = int(input("\n¿Cuál ficha quiere mover?: "))
         while ficha<1 or ficha>15:
             print("ERROR. Ficha invalida")
             ficha = int(input("\n¿Cuál ficha quiere mover?: "))
         
+        movimientos+=1
         indiceRen, indiceCol = indiceFicha(ficha, matriz)
         huecoAdyacente = hueco(matriz, indiceRen, indiceCol)
+        indiceHuecoRen, indiceHuecoCol = indiceHueco(matriz)
         
         if huecoAdyacente == True:
-            print("Mandar llamar funcino para mover") #mandar llamar funcion para mover
+            matriz = mover(matriz, indiceRen, indiceCol, indiceHuecoRen, indiceHuecoCol)
+            desplegarTablero(matriz)
         else:
             desplegarTablero(matriz)
             print("\nLa ficha que ha seleccionado no puede moverse. El tablero no ha registrado cambios")
         
-    print("¡Felicidades {}, haz ganado!".format(nombre))
+        ganador = estadoGanador(matriz)
+        
+    print("\n¡Felicidades {}, haz ganado!\nHas utilizado {} movimientos.\n".format(nombre, movimientos))
 
 matriz = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+indiceHuecoRen = 0
+indiceHuecoCol = 0
 indiceRen = 0
 indiceCol = 0
-main(matriz, indiceRen, indiceCol)
+main(matriz, indiceRen, indiceCol, indiceHuecoRen, indiceHuecoCol)
