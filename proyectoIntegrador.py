@@ -1,8 +1,27 @@
-#PENDIENTES
-#Optimizar la fuicion de hueco con ciclos para que no utilicen solo if (OPCIONAL; DEJAR AL FINAL) 
+"""
+    Nombre del Programa: Proyecto integrador: Slide Puzzle
+    Descripción: ddddddddddddd ?
+    Fecha: 19/10/2021 ?
 
-#DUDAS
-#Donde tenemos que preguntar al usuario si desea continuar jugando?
+    Juan Jesús Ortiz A01639936
+        - llenadoManual
+        - llenadoAutomatico
+        - EstadoGanador
+        - desplegarTablero
+        - indiceFicha
+        - hueco
+        - indiceHueco
+        - mover
+        - main
+
+    Ricardo López A01284902
+        - llenadoManual
+        - llenadoAutomatico
+        - EstadoGanador
+        - desplegarTablero
+        - indiceFicha
+        - main
+"""
 
 def llenadoManual(matriz):
     """
@@ -12,21 +31,31 @@ def llenadoManual(matriz):
             Parámetros de entrada: matriz
             Parámetros de salida: matriz
         Autores: 
-            Ricardo López
-            Juan Jesús Ortiz
+            Ricardo López A01284902
+            Juan Jesús Ortiz A01639936
     """
     lista = []
+    valoresValidos = ['1', '2','3', '4','5','6','7','8','9','10','11','12','13','14','15','0']
+
     for i in range (len(matriz)):
         for j in range(len(matriz[i])):
-            num = int(input())
             
-            while ((num > 15) or (num < 0)) or (num in lista):
+            validado = False
+            num = input()
+            
+            while validado==False:
+                while num not in valoresValidos:
+                    print('\033[31m'+"ERROR: Solo puede ingresar números"+'\033[39m')
+                    num = input()              
+                num = int(num)
                 if (num > 15) or (num < 0):
-                    print("ERROR: Valor fuera de rango")
-                    num = int(input())          
-                if num in lista:
-                    print("ERROR: No se puede repetir los números")
+                    print('\033[31m'+"ERROR: Valor fuera de rango"+'\033[39m')
                     num = int(input())
+                elif num in lista:
+                    print('\033[31m'+"ERROR: No se puede repetir los números"+'\033[39m')
+                    num = int(input())
+                else:
+                    validado = True
 
             lista.append(num)
             matriz[i][j] = num
@@ -41,8 +70,8 @@ def llenadoAutomatico(matriz):
             Parámetros de entrada: matriz
             Parámetros de salida: matriz
         Autores: 
-            Ricardo López
-            Juan Jesús Ortiz
+            Ricardo López A01284902
+            Juan Jesús Ortiz A01639936
     """
     from random import randint
 
@@ -67,11 +96,9 @@ def estadoGanador(matriz):
             Parámetros de entrada: matriz
             Parámetros de salida: ganador
         Autores: 
-            Ricardo López
-            Juan Jesús Ortiz
+            Ricardo López A01284902
+            Juan Jesús Ortiz A01639936
     """
-    #¿La matriz ganadora donde tiene que tener al 0?
-    #matrizGanadora1 = [[0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15]]
     matrizGanadora = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,'']]
     ganador = False
     if matriz == matrizGanadora:
@@ -87,8 +114,8 @@ def desplegarTablero(matriz):
             Parámetros de entrada: matriz
             Parámetros de salida: matriz
         Autores: 
-            Ricardo López
-            Juan Jesús Ortiz
+            Ricardo López A01284902
+            Juan Jesús Ortiz A01639936
     """
     for i in range (len(matriz)):
         for j in range(len(matriz[i])):    
@@ -96,9 +123,9 @@ def desplegarTablero(matriz):
                 matriz[i][j] = str(matriz[i][j])
                 matriz[i][j] = ''
 
-            print(matriz[i][j], end="\t")
+            print('\033[33m'+"{}".format(matriz[i][j]), end="\t")
 
-        print()
+        print('\033[39m')
     
     #return matriz
 
@@ -110,8 +137,8 @@ def indiceFicha(ficha, matriz):
             Parámetros de entrada: ficha, matriz
             Parámetros de salida: indiceRen, indiceCol
         Autores: 
-            Ricardo López
-            Juan Jesús Ortiz
+            Ricardo López A01284902
+            Juan Jesús Ortiz A01639936
     """
     for i in range (len(matriz)):
         for j in range(len(matriz[i])):
@@ -130,39 +157,57 @@ def hueco(matriz, indiceRen, indiceCol):
             Parámetros de entrada: matriz, indiceRen, indiceCol
             Parámetros de salida: huecoAdyacente
         Autores: 
-            Juan Jesús Ortiz
+            Juan Jesús Ortiz A01639936
     """
     huecoAdyacente = False
     
-    if indiceRen==0:
-        #Revisar abajo
+    if indiceRen==0 or indiceRen==1 or indiceRen==2:
         if matriz[indiceRen+1][indiceCol]=='':
             huecoAdyacente = True
     
-    if indiceRen==1 or indiceRen==2:
-        #Revisar arriba y abajo
-        if matriz[indiceRen+1][indiceCol]=='' or matriz[indiceRen-1][indiceCol]=='':
-            huecoAdyacente = True
-
-    if indiceRen==3:
-        #Revisar arriba
+    if indiceRen==1 or indiceRen==2 or indiceRen==3:
         if matriz[indiceRen-1][indiceCol]=='':
             huecoAdyacente = True
 
-    if indiceCol==0:
-        #Revisar derecha
+    if indiceCol==0 or indiceCol==1 or indiceCol==2:
         if matriz[indiceRen][indiceCol+1]=='':
             huecoAdyacente = True
     
-    if indiceCol==1 or indiceCol==2:
-        #Revisar derecha y izquierda
-        if matriz[indiceRen][indiceCol+1]=='' or matriz[indiceRen][indiceCol-1]=='':
-            huecoAdyacente = True
-
-    if indiceCol==3:
-        #Revisar izquierda    
+    if indiceCol==1 or indiceCol==2 or indiceCol==3:
         if matriz[indiceRen][indiceCol-1]=='':
             huecoAdyacente = True
+
+    """
+        if indiceRen==0:
+            #Revisar abajo
+            if matriz[indiceRen+1][indiceCol]=='':
+                huecoAdyacente = True
+        
+        if indiceRen==1 or indiceRen==2:
+            #Revisar arriba y abajo
+            if matriz[indiceRen+1][indiceCol]=='' or matriz[indiceRen-1][indiceCol]=='':
+                huecoAdyacente = True
+
+        if indiceRen==3:
+            #Revisar arriba
+            if matriz[indiceRen-1][indiceCol]=='':
+                huecoAdyacente = True
+
+        if indiceCol==0:
+            #Revisar derecha
+            if matriz[indiceRen][indiceCol+1]=='':
+                huecoAdyacente = True
+        
+        if indiceCol==1 or indiceCol==2:
+            #Revisar derecha y izquierda
+            if matriz[indiceRen][indiceCol+1]=='' or matriz[indiceRen][indiceCol-1]=='':
+                huecoAdyacente = True
+
+        if indiceCol==3:
+            #Revisar izquierda    
+            if matriz[indiceRen][indiceCol-1]=='':
+                huecoAdyacente = True
+    """
 
     return huecoAdyacente
 
@@ -174,7 +219,7 @@ def indiceHueco(matriz):
             Parámetros de entrada: matriz
             Parámetros de salida: indiceHuecoRen, indiceHuecoCol
         Autores: 
-            Juan Jesús Ortiz
+            Juan Jesús Ortiz A01639936
     """
     for i in range (len(matriz)):
         for j in range(len(matriz[i])):
@@ -192,7 +237,7 @@ def mover(matriz, indiceRen, indiceCol, indiceHuecoRen, indiceHuecoCol):
             Parámetros de entrada: matriz, indiceRen, indiceCol, indiceHuecoRen, indiceHuecoCol
             Parámetros de salida: matriz
         Autores: 
-            Juan Jesús Ortiz
+            Juan Jesús Ortiz A01639936
     """    
     matriz[indiceHuecoRen][indiceHuecoCol] = matriz[indiceRen][indiceCol]
     matriz[indiceRen][indiceCol] = 0
@@ -208,28 +253,49 @@ def main(matriz, indiceRen, indiceCol, indiceHuecoRen, indiceHuecoCol):
             Parámetros de entrada: matriz
             Parámetros de salida: -
         Autores: 
-            Ricardo López
-            Juan Jesús Ortiz
+            Ricardo López A01284902
+            Juan Jesús Ortiz A01639936
     """
-    movimientos = -1
-    nombre = input("Ingresa tu nombre: ")
-    decision = input("\n¿Desea llenar la tabla manualmente o que el programa lo haga automatico por usted? (m/a): ")
+
+    movimientos = 0
+    nombre = input("\nIngresa tu nombre: ")
+    decision = input("\n¿Desea llenar la tabla manualmente o que el programa lo haga automatico por usted? (m/a): ").lower()
+    
+    while decision!='m' and decision!='a':
+        print('\033[31m'+"\nERROR: El valor que acaba de ingresar no es valido"+'\033[39m')
+        decision = input("\n¿Desea llenar la tabla manualmente o que el programa lo haga automatico por usted? (m/a): ").lower()
+
     if decision=='m':
-        print("\nPara indicar el espacio vacio ingrese cero")
+        print('\033[36m'+"\nPara indicar el espacio vacio ingrese cero"+'\033[39m')
         matriz = llenadoManual(matriz)
-        print()
+        print("")
     else:
         llenadoAutomatico(matriz)
 
     desplegarTablero(matriz)
     
     ganador = estadoGanador(matriz)
+    
+    if ganador==False:
+        print('\033[36m'+"\nLe recordamos que en cualquier momento del juego puede decidir terminar la partida escribiendo \"no\" en la consola."+'\033[39m')
+
     while ganador!=True:
-        ficha = int(input("\n¿Cuál ficha quiere mover?: "))
-        while ficha<1 or ficha>15:
-            print("ERROR. Ficha invalida")
-            ficha = int(input("\n¿Cuál ficha quiere mover?: "))
+        ficha = input("\n¿Cuál ficha quiere mover?: ")
+        if ficha=='no':
+            print('\033[34m'+"\nPartida terminada.\n"+'\033[39m')
+            exit()
+        else:
+            ficha = int(ficha)
         
+        while ficha<1 or ficha>15:
+            print('\033[31m'+"ERROR: Ficha invalida"+'\033[39m')
+            ficha = input("\n¿Cuál ficha quiere mover?: ")
+            if ficha=='no':
+                print('\033[34m'+"\nPartida terminada.\n"+'\033[39m')
+                exit()
+            else:
+                ficha = int(ficha)
+
         movimientos+=1
         indiceRen, indiceCol = indiceFicha(ficha, matriz)
         huecoAdyacente = hueco(matriz, indiceRen, indiceCol)
@@ -240,11 +306,12 @@ def main(matriz, indiceRen, indiceCol, indiceHuecoRen, indiceHuecoCol):
             desplegarTablero(matriz)
         else:
             desplegarTablero(matriz)
-            print("\nLa ficha que ha seleccionado no puede moverse. El tablero no ha registrado cambios")
+            print('\033[31m'+"\nERROR: La ficha que ha seleccionado no puede moverse. El tablero no ha registrado cambios"+'\033[39m')
         
         ganador = estadoGanador(matriz)
         
-    print("\n¡Felicidades {}, haz ganado!\nHas utilizado {} movimientos.\n".format(nombre, movimientos))
+    print('\033[32m'+"\n¡Felicidades {}, haz ganado!\nHas utilizado {} movimientos.".format(nombre, movimientos))
+    print('\033[39m')
 
 matriz = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
 indiceHuecoRen = 0
