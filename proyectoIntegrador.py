@@ -125,12 +125,11 @@ def hueco(matriz, indiceRen, indiceCol):
     """
         Estandar de codificación:
             Nombre de Función: hueco
-            Descripción: Se encarga de identificar si es que la ficha seleccionada por el usuario tiene a la casilla vacía adyacente
+            Descripción: Se encarga de identificar si es que la ficha seleccionada por el usuario tiene la casilla vacía adyacente
                          a ella, tanto en lo horizontal, como en lo vertical.
             Parámetros de entrada: matriz, indiceRen, indiceCol
             Parámetros de salida: huecoAdyacente
         Autores: 
-            Ricardo López
             Juan Jesús Ortiz
     """
     huecoAdyacente = False
@@ -167,8 +166,16 @@ def hueco(matriz, indiceRen, indiceCol):
 
     return huecoAdyacente
 
-#poner estandar de codificación a la función de abajo
 def indiceHueco(matriz):
+    """
+        Estandar de codificación:
+            Nombre de Función: indiceHueco
+            Descripción: Se encarga de regresar el renglon y la columna en donde se encuentra el hueco.
+            Parámetros de entrada: matriz
+            Parámetros de salida: indiceHuecoRen, indiceHuecoCol
+        Autores: 
+            Juan Jesús Ortiz
+    """
     for i in range (len(matriz)):
         for j in range(len(matriz[i])):
             if matriz[i][j] == '': 
@@ -177,9 +184,16 @@ def indiceHueco(matriz):
 
     return indiceHuecoRen, indiceHuecoCol
 
-#poner estandar de codificación a la función de abajo
 def mover(matriz, indiceRen, indiceCol, indiceHuecoRen, indiceHuecoCol):
-    
+    """
+        Estandar de codificación:
+            Nombre de Función: hueco
+            Descripción: Sutituye los valores del hueco y de la ficha seleccionada para simular el hecho de que se movieron las fichas.
+            Parámetros de entrada: matriz, indiceRen, indiceCol, indiceHuecoRen, indiceHuecoCol
+            Parámetros de salida: matriz
+        Autores: 
+            Juan Jesús Ortiz
+    """    
     matriz[indiceHuecoRen][indiceHuecoCol] = matriz[indiceRen][indiceCol]
     matriz[indiceRen][indiceCol] = 0
                 
