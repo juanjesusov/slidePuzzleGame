@@ -1,7 +1,7 @@
 """
     Nombre del Programa: Proyecto integrador: Slide Puzzle
     Descripción: ddddddddddddd ?
-    Fecha: 19/10/2021 ?
+    Fecha: 19/10/2021 
 
     Juan Jesús Ortiz A01639936
         - llenadoManual
@@ -23,43 +23,41 @@
         - main
 """
 
-def llenadoManual(matriz):
+def llenadoManual(matriz, valoresValidos):
     """
         Estandar de codificación:
             Nombre de Función: llenadoManual
             Descripción: Pide al usuario escribir 16 números entre 0 y 15 sin repetirse.
-            Parámetros de entrada: matriz
+            Parámetros de entrada: matriz, valoresValidos
             Parámetros de salida: matriz
         Autores: 
             Ricardo López A01284902
             Juan Jesús Ortiz A01639936
     """
     lista = []
-    valoresValidos = ['1', '2','3', '4','5','6','7','8','9','10','11','12','13','14','15','0']
 
     for i in range (len(matriz)):
         for j in range(len(matriz[i])):
-            
-            validado = False
             num = input()
             
-            while validado==False:
-                while num not in valoresValidos:
-                    print('\033[31m'+"ERROR: Solo puede ingresar números"+'\033[39m')
-                    num = input()              
-                num = int(num)
-                if (num > 15) or (num < 0):
-                    print('\033[31m'+"ERROR: Valor fuera de rango"+'\033[39m')
-                    num = int(input())
-                elif num in lista:
-                    print('\033[31m'+"ERROR: No se puede repetir los números"+'\033[39m')
-                    num = int(input())
-                else:
-                    validado = True
+            while True:
+                while (num not in valoresValidos) or (int(num) in lista):
+                    if num not in valoresValidos:
+                        print('\033[31m'+"ERROR: Solo puede ingresar números enteros entre el 0 y 15"+'\033[39m')
+                        num = input()
+                        continue
 
-            lista.append(num)
+                    if int(num) in lista:
+                        print('\033[31m'+"ERROR: No se puede repetir los números"+'\033[39m')
+                        num = input()
+                
+                lista.append(int(num))
+                print(lista)
+                break
+            
+            num = int(num)
             matriz[i][j] = num
-
+            
     return matriz
 
 def llenadoAutomatico(matriz):
@@ -117,17 +115,15 @@ def desplegarTablero(matriz):
             Ricardo López A01284902
             Juan Jesús Ortiz A01639936
     """
+    from tabulate import tabulate
+
     for i in range (len(matriz)):
         for j in range(len(matriz[i])):    
             if matriz[i][j] == 0: 
                 matriz[i][j] = str(matriz[i][j])
                 matriz[i][j] = ''
 
-            print('\033[33m'+"{}".format(matriz[i][j]), end="\t")
-
-        print('\033[39m')
-    
-    #return matriz
+    print('\033[33m'+ tabulate(matriz,tablefmt='fancy_grid') +'\033[39m')
 
 def indiceFicha(ficha, matriz):
     """
@@ -258,6 +254,7 @@ def main(matriz, indiceRen, indiceCol, indiceHuecoRen, indiceHuecoCol):
     """
 
     movimientos = 0
+    valoresValidos = ['1', '2','3', '4','5','6','7','8','9','10','11','12','13','14','15','0']
     nombre = input("\nIngresa tu nombre: ")
     decision = input("\n¿Desea llenar la tabla manualmente o que el programa lo haga automatico por usted? (m/a): ").lower()
     
@@ -267,7 +264,7 @@ def main(matriz, indiceRen, indiceCol, indiceHuecoRen, indiceHuecoCol):
 
     if decision=='m':
         print('\033[36m'+"\nPara indicar el espacio vacio ingrese cero"+'\033[39m')
-        matriz = llenadoManual(matriz)
+        matriz = llenadoManual(matriz, valoresValidos)
         print("")
     else:
         llenadoAutomatico(matriz)
@@ -281,16 +278,20 @@ def main(matriz, indiceRen, indiceCol, indiceHuecoRen, indiceHuecoCol):
 
     while ganador!=True:
         ficha = input("\n¿Cuál ficha quiere mover?: ")
-        if ficha=='no':
-            print('\033[34m'+"\nPartida terminada.\n"+'\033[39m')
-            exit()
-        else:
-            ficha = int(ficha)
+        while ficha not in valoresValidos:
+            if ficha=='no' or ficha=='NO' or ficha=='No':
+                print('\033[34m'+"\nTerminando partida...\n"+'\033[39m')
+                exit()
+            else:
+                print('\033[31m'+"\nSolo puede ingresar valores entre el 1 y 15."+'\033[39m')
+                ficha = input("\n¿Cuál ficha quiere mover?: ")
+        
+        ficha = int(ficha)
         
         while ficha<1 or ficha>15:
             print('\033[31m'+"ERROR: Ficha invalida"+'\033[39m')
             ficha = input("\n¿Cuál ficha quiere mover?: ")
-            if ficha=='no':
+            if ficha=='no' or ficha=='NO' or ficha=='No':
                 print('\033[34m'+"\nPartida terminada.\n"+'\033[39m')
                 exit()
             else:
@@ -318,4 +319,5 @@ indiceHuecoRen = 0
 indiceHuecoCol = 0
 indiceRen = 0
 indiceCol = 0
+
 main(matriz, indiceRen, indiceCol, indiceHuecoRen, indiceHuecoCol)
